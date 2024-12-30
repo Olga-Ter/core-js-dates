@@ -157,8 +157,33 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const day = new Date(date);
+  let ans;
+  if (day.getUTCHours() === 12)
+    ans = `${
+      day.getUTCMonth() + 1
+    }/${day.getUTCDate()}/${day.getUTCFullYear()}, ${day.getUTCHours()}:${day
+      .getUTCMinutes()
+      .toString()
+      .padStart(2, '0')}:${day.getUTCSeconds().toString().padStart(2, '0')} PM`;
+  else if (day.getUTCHours() > 12)
+    ans = `${
+      day.getUTCMonth() + 1
+    }/${day.getUTCDate()}/${day.getUTCFullYear()}, ${
+      day.getUTCHours() - 12
+    }:${day.getUTCMinutes().toString().padStart(2, '0')}:${day
+      .getUTCSeconds()
+      .toString()
+      .padStart(2, '0')} PM`;
+  else
+    ans = `${
+      day.getUTCMonth() + 1
+    }/${day.getUTCDate()}/${day.getUTCFullYear()}, ${day.getUTCHours()}:${day
+      .getUTCMinutes()
+      .toString()
+      .padStart(2, '0')}:${day.getUTCSeconds().toString().padStart(2, '0')} AM`;
+  return ans;
 }
 
 /**
@@ -173,8 +198,21 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  let count = 0;
+  for (let i = 1; i <= 31; i += 1) {
+    if (
+      new Date(year, month - 1).getMonth() ===
+      new Date(year, month - 1, i).getMonth()
+    ) {
+      if (
+        new Date(year, month - 1, i).getDay() === 0 ||
+        new Date(year, month - 1, i).getDay() === 6
+      )
+        count += 1;
+    }
+  }
+  return count;
 }
 
 /**
